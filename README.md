@@ -1,2 +1,2 @@
-# spring-boot-rest-assured
-Spring Boot + Tests + Rest Assured
+# spring-boot-mockito
+Spring Boot + Mockito Tests
