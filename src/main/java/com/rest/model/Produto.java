@@ -10,20 +10,9 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Data
-@Setter
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
 @JsonInclude(Include.ALWAYS)
 @Entity
-@Table(name="tbl_produto")
+@Table(name="tbl_produtos")
 public class Produto {
 	@Id 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,4 +24,51 @@ public class Produto {
 	private int qtd;
 	@Column(name="valor")
 	private Double valor;
+	
+	public Produto() {
+	}
+	
+	public Produto(Integer id, String descricao, int qtd, Double valor) {
+		this.id = id;
+		this.descricao = descricao;
+		this.qtd = qtd;
+		this.valor = valor;
+	}
+	
+	public Produto(String descricao, int qtd, Double valor) {
+		this.descricao = descricao;
+		this.qtd = qtd;
+		this.valor = valor;
+	}
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+
+	public int getQtd() {
+		return qtd;
+	}
+
+	public void setQtd(int qtd) {
+		this.qtd = qtd;
+	}
+
+	public Double getValor() {
+		return valor;
+	}
+
+	public void setValor(Double valor) {
+		this.valor = valor;
+	}
 }

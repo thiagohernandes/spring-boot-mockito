@@ -13,7 +13,7 @@ import com.rest.model.Produto;
 public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
 
 	@Query(value= 	" SELECT id, descricao, qtd, valor " + 
-					" from tbl_produto   " + 
+					" from tbl_produtos   " + 
 					" where " + 
 					"	1 = 1 " + 
 					"	and UPPER(descricao) like UPPER(:pDescricao) " +

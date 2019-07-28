@@ -1,87 +1,105 @@
 package com.rest.controller;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static io.restassured.RestAssured.get;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.anything;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.test.context.junit4.SpringRunner;
 
+import com.google.gson.Gson;
 import com.rest.model.Produto;
-import com.rest.service.ProdutoService;
 
-@RunWith(MockitoJUnitRunner.class)
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import io.restassured.response.Response;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ProdutoControllerTests {
 	
-    @Mock
-    private ProdutoService produtoService;
-
-    @InjectMocks
-    private ProdutoController produtoController;
-    
-    Produto produto = new Produto();
-
+	private String URL_API = "/api-produtos";
+	private Gson gson;
+	
+	@LocalServerPort
+	int port;
+	
     @Before
-    public void init() {
-        MockitoAnnotations.initMocks(this);
-        produto = new Produto(17, "Produto 1", 3, 41.64);
+    public void setUp() {
+        RestAssured.port = port;
+        gson = new Gson();
+    }
+
+    @Test
+    public void getAllProdutosTests() {
+    	Response response = get(URL_API);
+    	response.then().body("size()", greaterThan(1));
     }
     
     @Test
-    public void return_Lista_Produtos_Success() {
-        List<Produto> listProdutos = new ArrayList<>();
-        Produto prod1 = new Produto(1, "Produto 1", 11, 343.11);
-        Produto prod2 = new Produto(2, "Produto 2", 43, 732.49);
-        listProdutos.add(prod1);
-        listProdutos.add(prod2);
-        when(produtoService.findAll()).thenReturn(listProdutos);
-        List<Produto> listaProdutosCon = produtoController.findAll();
-        assertEquals(2, listaProdutosCon.size());
-        verify(produtoService, times(1)).findAll();
+    public void postProdutoTests() {
+    	Produto novo = new Produto("Desc", 43, 44.32);
+    	given().contentType(ContentType.JSON)
+				.accept(ContentType.JSON)
+				.body(gson.toJson(novo))
+		.when().post(URL_API)
+	    .then()
+	        .statusCode(200)
+	        .body("descricao", equalTo("Desc"))
+	        .body("id", anything());
     }
     
     @Test
-    public void return_Produto_Success_ById(){
-        when(produtoService.findById(17)).thenReturn(produto);
-        Produto pro = produtoController.findById(17);
-        assertEquals("Produto 1", pro.getDescricao());
+    public void getProdutoIdTests() {
+    	Integer id = given().contentType(ContentType.JSON)
+    			  	 .when().get(URL_API)
+    			  	 .then()
+    			  	 	.extract().response().body().path("[0].id");
+    	 given().when().get(URL_API.concat("/id/" + id)).
+    	 then().body("descricao", Matchers.anything());
     }
     
     @Test
-    public void create_Produto_Success(){
-        produtoController.save(produto);
-        verify(produtoService, times(1)).save((produto));
+    public void putProdutoTests() {
+    	Integer id = given().contentType(ContentType.JSON)
+    			  	 .when().get(URL_API)
+    			     .then().extract().response().body().path("[0].id");
+    	Produto produto = new Produto(id, "Desc alterada", 43, 44.32);
+    	Response response = given().contentType(ContentType.JSON)
+				.accept(ContentType.JSON)
+				.body(gson.toJson(produto))
+    			.when()
+    			.put(URL_API);
+    	response.then().body("id", Matchers.is(id));
+    	response.then().body("descricao", Matchers.is("Desc alterada"));
+    	response.then().body("qtd", Matchers.is(43));
+    	response.then().body("valor", equalTo(44.32f));
     }
     
     @Test
-    public void delete_Produto_Success(){
-        produtoController.delete(produto.getId());
-        verify(produtoService, times(1)).deleteById(produto.getId());
-        assertEquals(null, produtoController.findById(produto.getId()));
-        
+    public void deleteProdutoTests() {
+    	Integer id = given().contentType(ContentType.JSON)
+    				 .when().get(URL_API)
+    				 .then().extract().response().body().path("[0].id");
+    	given().when().delete(URL_API.concat("/" + id))
+        	   .then().statusCode(200);
     }
     
     @Test
-    public void update_Produto_Success(){
-    	when(produtoService.findById(17)).thenReturn(produto);
-        Produto produto = produtoController.findById(17);
-    	produto.setDescricao("Nova descrição");
-    	produtoController.save(produto);
-    	verify(produtoService, times(1)).save(produto);
+    public void getProdutoByDescricaoTests() {
+    	String descricao = given().contentType(ContentType.JSON)
+				 .when().get(URL_API)
+				 .then().extract().response().body().path("[0].descricao");
+    	Response response = get(URL_API.concat("/descricao/" + descricao));
+    	response.then().body("size()", greaterThan(0));
     }
-     
+  
    
 }

@@ -1,9 +1,9 @@
 package com.rest.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,28 +24,28 @@ public class ProdutoController {
 	private ProdutoService produtoService;
 	
 	@PostMapping
-	public Produto save(@RequestBody Produto produto) {
-		return produtoService.save(produto);
+	public ResponseEntity<Produto> save(@RequestBody Produto produto) {
+		return ResponseEntity.ok(produtoService.save(produto));
 	}
 	
 	@PutMapping
-	public Produto update(@RequestBody Produto produto) {
-		return produtoService.save(produto);
+	public ResponseEntity<Produto> update(@RequestBody Produto produto) {
+		return ResponseEntity.ok(produtoService.save(produto));
 	}
 	
 	@GetMapping("/id/{id}")
-	public Produto findById(@PathVariable("id") Integer id) {
-		return produtoService.findById(id);
+	public ResponseEntity<Produto> findById(@PathVariable("id") Integer id) {
+		return ResponseEntity.ok(produtoService.findById(id));
 	}
 	
 	@GetMapping()
-	public List<Produto> findAll() {
-		return produtoService.findAll();
+	public ResponseEntity<List<Produto>> findAll() {
+		return ResponseEntity.ok(produtoService.findAll());
 	}
 	
 	@GetMapping("/descricao/{descricao}")
-	public List<Produto> findAllByDescricao(@PathVariable("descricao") String descricao) {
-		return produtoService.consultaDescricao(descricao);
+	public  ResponseEntity<List<Produto>> findAllByDescricao(@PathVariable("descricao") String descricao) {
+		return ResponseEntity.ok(produtoService.consultaDescricao(descricao));
 	}
 	
 	@DeleteMapping("/{id}")
