@@ -23,7 +23,7 @@ import io.restassured.response.Response;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ProdutoControllerTests {
+public class ProdutoControllerRestAssuredTests {
 	
 	private String URL_API = "/api-produtos";
 	private Gson gson;

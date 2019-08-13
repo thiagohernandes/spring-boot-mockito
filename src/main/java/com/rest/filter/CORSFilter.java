@@ -1,4 +1,4 @@
-package com.rest.config;
+package com.rest.filter;
 
 import java.io.IOException;
 
@@ -27,4 +27,3 @@ public class CORSFilter extends OncePerRequestFilter {
         chain.doFilter(req, res);
     }
 }
-

@@ -9,5 +9,5 @@ public class SpringBootRestAssuredApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBootRestAssuredApplication.class, args);
 	}
-
+	
 }
