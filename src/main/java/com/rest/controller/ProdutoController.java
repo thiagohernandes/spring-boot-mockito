@@ -44,7 +44,7 @@ public class ProdutoController {
 	}
 	
 	@GetMapping("/descricao/{descricao}")
-	public  ResponseEntity<List<Produto>> findAllByDescricao(@PathVariable("descricao") String descricao) {
+	public  ResponseEntity<List<Produto>> findByDescricao(@PathVariable("descricao") String descricao) {
 		return ResponseEntity.ok(produtoService.consultaDescricao(descricao));
 	}
 	
