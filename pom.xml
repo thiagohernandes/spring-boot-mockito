@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.rest</groupId>
-	<artifactId>spring-boot-mockito</artifactId>
+	<artifactId>spring-boot-rest-assured-mockito</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>spring-boot-mockito</name>
 	<description>Demo Spring Boot + Mockito Tests</description>
